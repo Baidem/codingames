@@ -532,11 +532,8 @@ class Tables {
 ---------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
 ******************** Câblage réseau *****************
-
-
 import java.util.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.math.*;
 
 /**
@@ -547,185 +544,31 @@ class Solution {
 
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
-        List<Long[]> table = new ArrayList<Long[]>();
         int N = in.nextInt();
+        List<Long> xList= new LinkedList<Long>();
+        List<Long> yList= new LinkedList<Long>(); 
         for (int i = 0; i < N; i++) {
             int X = in.nextInt();
+            xList.add(Long.valueOf(X));
             int Y = in.nextInt();
-            Long[] line = new Long[2];
-            line[0] = Long.valueOf(X);
-            line[1] = Long.valueOf(Y);
-            table.add(line);
+            yList.add(Long.valueOf(Y));
         }
-        CalculTable calculTable = new CalculTable(Long.valueOf(N), table);
-        GiveSolution giveSolution = new GiveSolution(calculTable);
-        
-        System.out.println(giveSolution.result());
-    }
-}
+        Long xMax = Collections.max(xList);
+        Long xMin = Collections.min(xList);
+        Collections.sort(yList);
 
-class CalculTable {
-
-    private Long nbrHouses;
-    private List<House> houses;
-    private Long xStart;
-    private Long xEnd;
-    private Long yTop;
-    private Long yDown;
-    private Long yIndexTop;
-    private Long yIndexDown;
-    
-
-    public CalculTable(Long n , List<Long[]> table) {
-        this.nbrHouses = n;
-        this.houses = housesBuilder(table);
-        this.xStart = xStartEnd()[0];
-        this.xEnd = xStartEnd()[1];
-        this.yTop = yTopDown()[0];
-        this.yDown = yTopDown()[1];
-        this.yIndexTop = this.yTop;
-        this.yIndexDown = this.yDown;
-    }
-
-    private List<House> housesBuilder(List<Long[]> table) {
-        List<House> hList = new ArrayList<House>();
-        Long i = 1l;
-        for (Long[] longs : table) {
-            House house = new House(i, longs[0], longs[1]);
-            hList.add(house);
-            i++;
-        }
-        return hList;
-    }
-
-    private Long[] xStartEnd() {
-        List<Long> xList = new ArrayList<Long>();
-        for (House house : houses) {
-            xList.add(house.getX());
-        }
-        Long[] xStartEnd = {Collections.max(xList), Collections.min(xList)};
-        return xStartEnd; 
-    }
-
-    private Long[] yTopDown() {
-        List<Long> yList = new ArrayList<Long>();
-        for (House house : houses) {
-            yList.add(house.getY());
-        }
-        Long[] xStartEnd = {Collections.max(yList), Collections.min(yList)};
-        return xStartEnd; 
-    }
-
-    public Long getNbrHouses() {
-        return nbrHouses;
-    }
-
-    public List<House> getHouses() {
-        return houses;
-    }
-
-    public Long getxStart() {
-        return xStart;
-    }
-
-    public Long getxEnd() {
-        return xEnd;
-    }
-
-    public Long getyTop() {
-        return yTop;
-    }
-
-    public Long getyDown() {
-        return yDown;
-    }
-
-    public Long getyIndexTop() {
-        return yIndexTop;
-    }
-
-    public Long getyIndexDown() {
-        return yIndexDown;
-    }
-
-    public void setyIndexTop(Long yIndexTop) {
-        this.yIndexTop = yIndexTop;
-    }
-
-    public void setyIndexDown(Long yIndexDown) {
-        this.yIndexDown = yIndexDown;
-    }
-}
-
-class House {
-
-    private Long id;
-    private Long x;
-    private Long y;
-
-    public House(Long id, Long x, Long y) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public Long getX() {
-        return x;
-    }
-    public Long getY() {
-        return y;
-    }
-}
-
-class GiveSolution {
-
-    private CalculTable calculTable;
-
-    public GiveSolution(CalculTable calculTable) {
-        this.calculTable = calculTable;
-    }
-
-    public Long result() {
-        Long sum = 0l;
-        Long xlength = calculTable.getxStart() - calculTable.getxEnd();
-        List<Long> sums;
-        Boolean condition = true;
-        while (condition) {
-            sums = new ArrayList<Long>();
-            if ((calculTable.getyIndexTop() - calculTable.getyIndexDown()) < 3) {
-                for (Long i = calculTable.getyIndexDown(); i <= calculTable.getyIndexTop(); i++) {
-                    sum = 0l;
-                    for (House house : calculTable.getHouses()) {
-                        Long s= 0l;
-                        s = (Math.abs(i - house.getY()));
-                        sum = sum + s;
-                    }
-                sums.add(sum);
-                }
-            sum = Collections.min(sums) + xlength;
-            condition = false;           
+        Long median;
+            if (yList.size() % 2 != 0) {
+                median = yList.get(yList.size() / 2);
             } else {
-                
-                Long[] iArray = {calculTable.getyIndexTop(), calculTable.getyIndexDown() + ((calculTable.getyIndexTop() - calculTable.getyIndexDown())/2), calculTable.getyIndexDown()};
-                for (Long i : iArray) {
-                    sum = 0l;
-                    for (House house : calculTable.getHouses()) {
-                        Long s= 0l;
-                        s = (Math.abs(i - house.getY()));
-                        sum = sum + s;
-                    }
-                    sums.add(sum);
-                }
-                if (sums.get(0) < sums.get(2)) {
-                    calculTable.setyIndexDown(iArray[1]);
-                } else {
-                    calculTable.setyIndexTop(iArray[1]);
-                }
+                median = (yList.get(yList.size() / 2) + yList.get((yList.size() / 2) - 1)) / 2;
             }
-        } 
-        return sum;
+
+        Long sum = 0l;
+        for (Long y : yList) {
+            sum = sum + Math.abs(median - y); 
+        }
+    
+        System.out.println(xMax - xMin + sum);
     }
 }
