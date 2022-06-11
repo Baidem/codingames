@@ -532,6 +532,7 @@ class Tables {
 ---------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
 ******************** Câblage réseau *****************
+
 import java.util.*;
 import java.io.*;
 import java.math.*;
@@ -570,5 +571,41 @@ class Solution {
         }
     
         System.out.println(xMax - xMin + sum);
+    }
+}
+
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
+******************** Chevaux de course *****************
+54%
+
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+class Solution {
+
+    public static void main(String args[]) {
+        Scanner in = new Scanner(System.in);
+        int N = in.nextInt();
+        List<Integer> pis = new LinkedList<Integer>();
+        for (int i = 0; i < N; i++) {
+            int pi = in.nextInt();
+            pis.add(pi);
+        }
+        Collections.sort(pis);
+
+        List<Integer> gaps = new LinkedList<Integer>();
+        for (int i = 0; i < N-1; i++) {
+            gaps.add(pis.get(i+1)-pis.get(i));
+        }
+        System.out.println(Collections.min(gaps));
     }
 }
