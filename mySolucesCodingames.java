@@ -580,7 +580,6 @@ class Solution {
 ---------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------------------------------
 ******************** Chevaux de course *****************
-54%
 
 import java.util.*;
 import java.io.*;
@@ -595,17 +594,22 @@ class Solution {
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
         int N = in.nextInt();
-        List<Integer> pis = new LinkedList<Integer>();
+        int[] pis = new int[N];
         for (int i = 0; i < N; i++) {
             int pi = in.nextInt();
-            pis.add(pi);
+            pis[i] = pi;
         }
-        Collections.sort(pis);
-
-        List<Integer> gaps = new LinkedList<Integer>();
-        for (int i = 0; i < N-1; i++) {
-            gaps.add(pis.get(i+1)-pis.get(i));
-        }
-        System.out.println(Collections.min(gaps));
+        Arrays.sort(pis);
+        int gapMin = 10000000;
+        int i = 0;
+        do {
+            int s = pis[i+1] - pis[i];
+            if (s < gapMin) {
+                gapMin = s;
+            }
+            i++;
+        } while (i < N-1);
+        
+        System.out.println(gapMin);
     }
 }
